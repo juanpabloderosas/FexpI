@@ -1,0 +1,41 @@
+"-------------------------------------------------------------------------------------------"
+"  Atmospheric CO2 record based on ice core data before 1958,                               "
+"  (Ethridge et. al., 1996; MacFarling Meure et al., 2006) and                              "
+"  yearly averages of direct observations from Mauna Loa and the South Pole after and       "
+"  including 1958 (from Scripps CO2 Program).                                               "
+"                                                                                           "
+"  in situ data is based on simple average of Mauna Loa and South Pole from values on Jan 1 "
+"                                                                                           "   
+"  For Mauna Loa Observatory, Hawaii: Latitude 19.5°N Longitude 155.6°W Elevation 3397m     "
+"  For South Pole: Latitude 90.0°S Elevation 2810m                                          "
+"                                                                                           "
+"   Scripps CO2 Source: R. F. Keeling, S. C. Piper, A. F. Bollenbacher and S. J. Walker     "
+"   Scripps CO2 Program ( http://scrippsco2.ucsd.edu )                                      "
+"   Scripps Institution of Oceanography (SIO)                                               "
+"   University of California                                                                "
+"   La Jolla, California USA 92093-0244                                                     "
+"                                                                                           "
+"   Status of Scripps CO2 data and correspondence:                                          "
+"                                                                                           "
+"   These data are subject to revision based on recalibration of standard gases. Questions  "
+"   about the data should be directed to Dr. Ralph Keeling (rkeeling@ucsd.edu) and          "
+"   and Dr. Stephen Piper (scpiper@popmail.ucsd.edu), Scripps CO2 Program.                  "
+"                                                                                           "
+"                                                                                           "
+"-------------------------------------------------------------------------------------------"
+"                                                                                           "
+"Y";"CO2"
+13;276.75
+29;277.88
+56;277.38
+104;277.51
+136;278.13
+168;280.05
+202;280.72
+227;281.49
+274;280.13
+302;279.83
+329;278.92
+364;277.05
+428;276.91
+461;276.72
