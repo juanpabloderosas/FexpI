@@ -82,6 +82,8 @@ volatile int  n_intF = 0;
 volatile int  n_intR = 0;
 volatile unsigned long t_intF = 0;
 volatile unsigned long t_intR = 0;
+volatile bool banderaR = 0;
+volatile bool banderaF = 0;
 /// S E T U P ///////////////////////////////////////////////////////////////////////////
 void setup() {
   
@@ -288,6 +290,7 @@ void fc_negra_R(void){
 t_intR = micros(); 
 detachInterrupt(0);
 n_intR++;
+banderaR = 1;
 EIFR = bit(INTF0); attachInterrupt(0, fc_negra_F, FALLING);
 }
 
@@ -296,6 +299,7 @@ void fc_negra_F(void){
 t_intF = micros(); 
 detachInterrupt(0);
 n_intF++;
+banderaF = 1;
 EIFR = bit(INTF0); attachInterrupt(0, fc_negra_R, RISING);
 }
 
@@ -335,12 +339,12 @@ attachInterrupt(0, fc_negra_R, RISING);
 Serial.print(F("################################# M e d i d a ###########################################################\n"));
 Serial.print(F("t,ax,ay,az,n_intR,t_intR,n_intF,t_intF\n"));
 unsigned long tf1 = micros();
-t_intR = tf1;
-t_intF = tf1;
+
+
 do{
   
     
-    float t = (micros() - tf1) / 1000000.0000;
+    float t = (float)(micros() - tf1) / 1000000.0000;
 
   
     //imu.updateBias();
@@ -357,15 +361,22 @@ do{
     Serial.print(az);
 
     Serial.print(",");
-    Serial.print(n_intR);
-    Serial.print(",");
-    Serial.print(t_intR - tf1);
-    Serial.print(",");
-    Serial.print(n_intF);
-    Serial.print(",");
-    Serial.print(t_intF - tf1);
-  
-  
+    
+        if(banderaR == 1){    
+          Serial.print(n_intR);
+          Serial.print(",");
+          Serial.print(t_intR - tf1);
+          Serial.print(",");
+          banderaR = 0;
+        }else{Serial.print(F(",,"));}
+        
+        if(banderaF == 1){    
+          Serial.print(n_intF);
+          Serial.print(",");
+          Serial.print(t_intF - tf1);
+          banderaF = 0;
+        }else{Serial.print(F(","));}
+
 
 Serial.print("\n");
 n++;
