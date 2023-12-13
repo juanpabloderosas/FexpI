@@ -206,44 +206,46 @@ void en_que_rango(void){
                   Wire.requestFrom(0x68,1);    // pide registro de control
                   byte registerData = Wire.read();           // lee el byte de control 
  
- if(bitRead(registerData,3) == 0){Serial.print(F("Rango Acelerómetro +-2g\n#"));}else{Serial.println(F("Rango Acelerómetro +- 4g\n#"));};
-                  
+ bool AFS_SELbit3 = ( registerData & 0b00001000 );
+ bool AFS_SELbit4 = ( registerData & 0b00010000 );
+
+int AFS_SEL = AFS_SELbit3 + 2 * AFS_SELbit4;
+
+Serial.print(F("Rango Acelerómetro:\n  0 = +-  2g\n  1 = +-  4g\n  2 = +-  8g\n  3 = +- 16g\n"));
+Serial.print(F("\nAcelerómetro Configurado en (ver tabla)  ")); Serial.println(AFS_SEL);
 }
 
 //cambiar rango del acelerómetro
 void rango_acel(void){
-static bool rango = 0;
 
-if(rango == 0){
-Wire.beginTransmission(0x68); //dirección acelerómetro
-Wire.write(0x1C);     // registro configuración acelerómetro
-  Wire.endTransmission();                    
-  Wire.requestFrom(0x68,1);    // pide registro de control
-  byte registerData = Wire.read();           // lee el byte de control 
-delay(100);
-bitSet(registerData, 3);                   // Cambia bit 5 a 1 
-Wire.beginTransmission(0x68);  // Dirección rtc
-Wire.write(0x1C);            // registro de control
-Wire.write(registerData);    // ponemos el byte con los bits 4 y 5 en 1
-Wire.endTransmission();
-Serial.println(F("Acelerómetro Configurado en +- 4g"));
-rango = !rango;
-}
-  else{
-      Wire.beginTransmission(0x68); //dirección acelerómetro
-      Wire.write(0x1C);     // registro configuración acelerómetro
-        Wire.endTransmission();                    
-        Wire.requestFrom(0x68,1);    // pide registro de control
-        byte registerData = Wire.read();           // lee el byte de control 
-      delay(100);
-      bitClear(registerData, 3);                   // Cambia bit 3 a 0 
-      Wire.beginTransmission(0x68);  // Dirección acelerómetro
-      Wire.write(0x1C);            // registro de control
-      Wire.write(registerData);    // ponemos el byte con los bits 4 y 5 en 1
-      Wire.endTransmission();
-      Serial.println(F("Acelerómetro Configurado en +- 2g"));
-      rango = !rango;  
-      }
+////////////////////////////////////////////////////////////////////
+int AFS_SEL = 0;
+
+Serial.print(F("Rango Acelerómetro:\n  0 = +-  2g\n  1 = +-  4g\n  2 = +-  8g\n  3 = +- 16g\n"));
+while(!Serial.available());
+            if(Serial.available()) {
+            AFS_SEL = Serial.parseInt();
+            Serial.end(); //apaga para vaciar el serial (no conozco otra forma menos rústica)
+            Serial.begin(baudios);
+            while(Serial.available());
+           }
+
+bool AFS_SELbit3  = AFS_SEL & 0b00000001;
+bool AFS_SELbit4  = AFS_SEL & 0b00000010;
+
+///////////////////////////////////////////////////////////////////
+    Wire.beginTransmission(0x68); //dirección acelerómetro
+    Wire.write(0x1C);     // registro configuración acelerómetro
+    Wire.endTransmission();                    
+    Wire.requestFrom(0x68,1);    // pide registro de control
+    byte registerData = Wire.read();           // lee el byte de control 
+    bitWrite(registerData, 3, AFS_SELbit3);
+    bitWrite(registerData, 4, AFS_SELbit4);
+    Wire.beginTransmission(0x68);  // Dirección chip
+    Wire.write(0x1C);            // registro de control
+    Wire.write(registerData);    // ponemos el byte con los bits 3 y 4 en 
+    Wire.endTransmission();
+    Serial.print(F("\nAcelerómetro Configurado en (ver tabla)  ")); Serial.println(AFS_SEL);
 
 }
 
@@ -274,11 +276,11 @@ Wire.write(0x1A);     // registro configuración DLPF
   bitWrite(registerData, 0, DLPFbit0);
   bitWrite(registerData, 1, DLPFbit1);
   bitWrite(registerData, 2, DLPFbit2);
-  Wire.beginTransmission(0x68);  // Dirección rtc
+  Wire.beginTransmission(0x68);  // Dirección chip
   Wire.write(0x1A);            // registro de control
   Wire.write(registerData);    // ponemos el byte con los bits 4 y 5 en 1
   Wire.endTransmission();
-  Serial.print(F("Digital Low Pass Filter (ver tabla) configurado en "));Serial.println(DLPF);
+  Serial.print(F("\nDigital Low Pass Filter (ver tabla) configurado en "));Serial.println(DLPF);
   
 }
 
