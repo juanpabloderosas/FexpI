@@ -18,7 +18,7 @@ Este código sirve para:
 
 Naranja  ------> Vcc
 Blanco   ------> GND
-Verde    ------> D2 (si se quiere probar la fotocompuerta, también conectar a A0)
+Verde    ------> D2 y A0 (A0 si se quiere probar la fotocompuerta)
 ############################ 
 
 
