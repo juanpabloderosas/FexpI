@@ -317,7 +317,7 @@ void pruebafotocompuerta(void){
           Serial.println(F("Comenzando en 6...")); delay(2000);
           Serial.println(F("4...")); delay(2000); Serial.println(F("2..."));delay(2000); 
 
-      do{Serial.println(analogRead(A0));}while(!Serial.available());
+      do{Serial.println(analogRead(A0));delay(50);}while(!Serial.available());
       delay(1000);
  
   Serial.print(F("#\n#\n#\n#\n#\n#\nMedida interrumpida por usuario\n"));
