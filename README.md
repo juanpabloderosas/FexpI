@@ -1,11 +1,21 @@
 # FexpI
-Notebooks de Experimental en R
 
-Acá vamos a almacenar cosas de Experimental I, de códigos y notebooks, apuntes, etc.
+Esta página es el repositorio de Física Experimental I, de la carrera de Licenciatura en Física de la **[UNSL](www.unsl.edu.ar)**
 
-La idea es que aprendamos un poco que existe github, y el control de versiones para trabajo colaborativo (es una gran herramienta de hecho).
+Está dividido por carpetas para descargar. Para empezar:
 
-# Divisiones
+## Guías de Laboratorio
 
-Vamos a dividir en carpetas los temas?
+Contiene las guías de Laboratorio de la Materia.
 
+## Labos_build (ni mirar)
+
+Tiene los archivos para generar los pdf.
+
+## CodeArduino
+
+Tiene los códigos de los diferentes sensores / montajes que usamos en la materia.
+
+## Análisis de Datos
+
+Contiene los archivos que vamos haciendo para analizar los datos de los laboratorios.
