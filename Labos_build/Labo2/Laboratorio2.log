@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2019.9.24)  30 AUG 2023 07:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2024.8.7)  22 AUG 2024 07:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**Lab2_2023.tex
-(./Lab2_2023.tex
+**Laboratorio2.tex
+(./Laboratorio2.tex
 LaTeX2e <2016/02/01>
-Babel <3.9q> and hyphenation patterns for 34 language(s) loaded.
+Babel <3.9q> and hyphenation patterns for 81 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
@@ -1163,11 +1163,11 @@ File: lettrine.sty 2015/08/31 v1.9 (Daniel Flipo)
 
 Loading lettrine.cfg
 (/usr/share/texlive/texmf-dist/tex/latex/lettrine/lettrine.cfg))
-(./Lab2_2023.aux
+(./Laboratorio2.aux
 LaTeX Info: Redefining \. on input line 24.
 LaTeX Info: Redefining \% on input line 24.
 )
-\openout1 = `Lab2_2023.aux'.
+\openout1 = `Laboratorio2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 109.
 LaTeX Font Info:    ... okay on input line 109.
@@ -1190,7 +1190,8 @@ Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Info: Redefining \. on input line 109.
 LaTeX Info: Redefining \% on input line 109.
- (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
+
+(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count164
 \scratchdimen=\dimen266
@@ -1237,9 +1238,9 @@ LaTeX Info: Redefining \ref on input line 109.
 LaTeX Info: Redefining \pageref on input line 109.
 LaTeX Info: Redefining \nameref on input line 109.
 
-(./Lab2_2023.out) (./Lab2_2023.out)
+(./Laboratorio2.out) (./Laboratorio2.out)
 \@outlinefile=\write6
-\openout6 = `Lab2_2023.out'.
+\openout6 = `Laboratorio2.out'.
 
 LaTeX Font Info:    Try loading font information for U+msa on input line 114.
 
@@ -1758,23 +1759,23 @@ Package babel Info: Redefining spanish shorthand "?
  [9]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 436.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 436.
- (./Lab2_2023.aux
+ (./Laboratorio2.aux
 LaTeX Info: Redefining \. on input line 24.
 LaTeX Info: Redefining \% on input line 24.
 )
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 436.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 436.
-Package rerunfilecheck Info: File `Lab2_2023.out' has not changed.
+Package rerunfilecheck Info: File `Laboratorio2.out' has not changed.
 (rerunfilecheck)             Checksum: 15C3FE5DA14FF53D82A77BFFA7577A01;974.
  ) 
 Here is how much of TeX's memory you used:
- 31772 strings out of 494277
- 722063 string characters out of 6162222
- 980870 words of memory out of 5000000
- 34469 multiletter control sequences out of 15000+600000
+ 31772 strings out of 493029
+ 722102 string characters out of 6136235
+ 984048 words of memory out of 5000000
+ 34671 multiletter control sequences out of 15000+600000
  52739 words of font info for 116 fonts, out of 8000000 for 9000
- 398 hyphenation exceptions out of 8191
- 55i,16n,84p,836b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 1141 hyphenation exceptions out of 8191
+ 55i,16n,84p,839b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texli
@@ -1797,7 +1798,7 @@ ic/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
 onts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8
 .pfb>
-Output written on Lab2_2023.pdf (9 pages, 527233 bytes).
+Output written on Laboratorio2.pdf (9 pages, 527217 bytes).
 PDF statistics:
  269 PDF objects out of 1000 (max. 8388607)
  223 compressed objects within 3 object streams
