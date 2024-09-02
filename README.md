@@ -4,9 +4,9 @@ Esta página es el repositorio de Física Experimental I, de la carrera de Licen
 
 Está dividido por carpetas para descargar. Para empezar:
 
-## Guías de Laboratorio
+## LaboratoriosPDF
 
-Contiene las guías de Laboratorio de la Materia.
+Contiene las guías de Laboratorio de la Materia y algunos extras.
 
 ## Labos_build (ni mirar)
 
