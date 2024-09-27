@@ -1,7 +1,7 @@
 unsigned long TOF = 0; // Tiempo de Vuelo (Time of Flight)en microsegundos
 
-const uint8_t Trig = 4; // D4 Dispara
-const uint8_t Echo = 5; // D5 Recibe
+const uint8_t Trig = 4; // 4 Dispara
+const uint8_t Echo = 5; // 5 Recibe
 
 
 void setup() {
@@ -20,7 +20,7 @@ digitalWrite(Trig, LOW);
 TOF = pulseIn(Echo, HIGH);
 
 Serial.println(TOF);
-delay(150);
+delay(100);
 
 
 
