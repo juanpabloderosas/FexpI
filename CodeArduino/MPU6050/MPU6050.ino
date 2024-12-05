@@ -67,7 +67,7 @@ basicMPU6050<LP_FILTER,  GYRO_SENS,  ACCEL_RANGE, ADDRESS_A0,
 
 
 //baudios
-const long baudios = 2000000; 
+const long baudios = 230400; 
 
 //constante de calibración
 float c = 0.0; //variable global de calibración
@@ -90,8 +90,6 @@ void setup() {
   Serial.begin(baudios);
   Serial.println("Programa para calibrar y medir");
   
-// Acelerómetro
-  TWBR = 12;  //http://www.gammon.com.au/i2c (setea frecuencia de I2C a 1000kHz)
 
   imu.setup();
   TWBR = 12;  //http://www.gammon.com.au/i2c (setea frecuencia de I2C a 1000kHz)
@@ -107,14 +105,17 @@ void setup() {
 
 void loop() { 
 Serial.print(F("\nEscriba:\n\n\\
-      a para imprimir constantes de calibratio (CTRL + ENTER)\n\n\\
-      c para calibrar el acelerómetro (CTRL + ENTER)\n\n\\
+      a para imprimir constantes de calibratio\n\n\\
+      c para calibrar el acelerómetro\n\n\\
       i para ver ángulos del acelerómetro\n\n\\
-      s para imprimir medidas sin calibrar (CTRL + ENTER)\n\n\\
+      s para imprimir medidas sin calibrar del acelerómetro\n\n\\
+      w para imprimir meddias sin calibrar del giroscopo\n\n\\
       p para probar la fotocompuerta\n\n\\
-      m para medir  (CTRL + ENTER)\n\n\\
+      m para medir\n\n\\
       r para cambiar el rango del acelerómetro (2g ó 4g)\n\n\\
+      t para cambiar el rango del giróscopo\n\n\\
       g para informar el rango del acelerómetro\n\n\\
+      h para informar el rango del giróscopo\n\n\\
       f para cambiar el Filtro Digital Pasa Bajos\n\n"));
 
 
@@ -145,15 +146,24 @@ Serial.print(F("\nEscriba:\n\n\\
                             case 's':
                             mide_imprime_acel(1.00); break;
 
+                            case 'w':
+                            mide_imprime_giroscopio(); break;
+                            
                             case 'p':
                             pruebafotocompuerta(); break;
 
                             case 'r':
                             rango_acel(); break;
+                            
+                            case 't':
+                            rango_giroscopo(); break;
 
                             case 'g':
-                            en_que_rango();break;
+                            en_que_rango_acel();break;
 
+                            case 'h':
+                            en_que_rango_giroscopo();break;
+                            
                             case 'f':
                             LowPassFilter(); break;
 
@@ -199,7 +209,7 @@ Serial.end();Serial.begin(baudios);
 
 //rango acelerómetro
 //preguntar rango del acelerómetro
-void en_que_rango(void){
+void en_que_rango_acel(void){
                   Wire.beginTransmission(0x68); //dirección acelerómetro
                   Wire.write(0x1C);     // registro configuración acelerómetro
                   Wire.endTransmission();                    
@@ -214,6 +224,62 @@ int AFS_SEL = AFS_SELbit3 + 2 * AFS_SELbit4;
 Serial.print(F("Rango Acelerómetro:\n  0 = +-  2g\n  1 = +-  4g\n  2 = +-  8g\n  3 = +- 16g\n"));
 Serial.print(F("\nAcelerómetro Configurado en (ver tabla)  ")); Serial.println(AFS_SEL);
 }
+
+//preguntar rango del giroscopo.
+
+void en_que_rango_giroscopo(void){
+                  Wire.beginTransmission(0x68); //dirección MPU
+                  Wire.write(0x1B);     // registro configuración giroscopo
+                  Wire.endTransmission();                    
+                  Wire.requestFrom(0x68,1);    // pide registro de control
+                  byte registerData = Wire.read();           // lee el byte de control 
+ 
+ bool FS_SELbit3 = ( registerData & 0b00001000 );
+ bool FS_SELbit4 = ( registerData & 0b00010000 );
+
+int FS_SEL = FS_SELbit3 + 2 * FS_SELbit4;
+
+Serial.print(F("Rango Giróscopo:\n  0 = +- 250°/s\n  1 = +- 500 °/s\n  2 = +- 1000°/s\n  3 = +- 2000°/s\n"));
+Serial.print(F("\nGiróscopo Configurado en (ver tabla)")); Serial.println(FS_SEL);
+}
+
+
+//cambiar rango del giróscopo
+
+void rango_giroscopo(void){
+
+////////////////////////////////////////////////////////////////////
+int FS_SEL = 0;
+
+Serial.print(F("Rango Giróscopo:\n  0 = +- 250°/s\n  1 = +- 500 °/s\n  2 = +- 1000°/s\n  3 = +- 2000°/s\n"));
+while(!Serial.available());
+            if(Serial.available()) {
+            FS_SEL = Serial.parseInt();
+            Serial.end(); //apaga para vaciar el serial (no conozco otra forma menos rústica)
+            Serial.begin(baudios);
+            while(Serial.available());
+           }
+
+bool FS_SELbit3  = FS_SEL & 0b00000001;
+bool FS_SELbit4  = FS_SEL & 0b00000010;
+
+///////////////////////////////////////////////////////////////////
+    Wire.beginTransmission(0x68); //dirección acelerómetro
+    Wire.write(0x1B);     // registro configuración acelerómetro
+    Wire.endTransmission();                    
+    Wire.requestFrom(0x68,1);    // pide registro de control
+    byte registerData = Wire.read();           // lee el byte de control 
+    bitWrite(registerData, 3, FS_SELbit3);
+    bitWrite(registerData, 4, FS_SELbit4);
+    Wire.beginTransmission(0x68);  // Dirección chip
+    Wire.write(0x1B);            // registro de control
+    Wire.write(registerData);    // ponemos el byte con los bits 3 y 4 en 
+    Wire.endTransmission();
+    Serial.print(F("\nGiróscopo Configurado en (ver tabla)  ")); Serial.println(FS_SEL);
+
+}
+
+
 
 //cambiar rango del acelerómetro
 void rango_acel(void){
@@ -310,7 +376,7 @@ EIFR = bit(INTF0); attachInterrupt(0, fc_negra_R, RISING);
 void pruebafotocompuerta(void){
                         pinMode(A0, INPUT);
 
-          Serial.println(F("Valores de referencia: \n\n < 100 para la fotocompuerta sin obstruir \n\n > 100 para fotocompuerta tapada \n\n \\
+          Serial.println(F("Valores de referencia: \n\n < 100 para la fotocompuerta sin obstruir \n\n > 800 para fotocompuerta tapada \n\n \\
           Para interrumpir, presionar cualquier tecla."));
 
 
@@ -326,6 +392,25 @@ void pruebafotocompuerta(void){
 
 
 
+void mide_imprime_giroscopio(){
+
+do{
+      float wx =  (float)imu.rawGx();
+      float wy =  (float)imu.rawGy(); 
+      float wz =  (float)imu.rawGz();
+
+    Serial.print(micros()/1000000.00);
+    Serial.print(",");
+    Serial.print(wx);
+    Serial.print(",");
+    Serial.print(wy);
+    Serial.print(",");
+    Serial.println(wz);
+    delay(5);
+}while(!Serial.available());
+
+}
+
 
 //medida con todos
 void mide_imprime_acel(float c_cal){
@@ -339,7 +424,7 @@ pinMode(2, INPUT);
 attachInterrupt(0, fc_negra_R, RISING);
 
 Serial.print(F("################################# M e d i d a ###########################################################\n"));
-Serial.print(F("t,ax,ay,az,n_intR,t_intR,n_intF,t_intF\n"));
+Serial.print(F("t,ax,ay,az,wx,wy,wz,n_intR,t_intR,n_intF,t_intF\n"));
 unsigned long tf1 = micros();
 
 
@@ -353,7 +438,12 @@ do{
     float ax =  (float)imu.rawAx() * c_cal;
     float ay =  (float)imu.rawAy() * c_cal; 
     float az =  (float)imu.rawAz() * c_cal;
-   
+    float wx = imu.rawGx();
+    float wy = imu.rawGy();
+    float wz = imu.rawGz();
+    
+
+
     Serial.print(t,4);
     Serial.print(",");
     Serial.print(ax);
@@ -361,6 +451,13 @@ do{
     Serial.print(ay);
     Serial.print( "," );
     Serial.print(az);
+    Serial.print( "," );
+    Serial.print(wx);
+    Serial.print( "," );
+    Serial.print(wy);
+    Serial.print( "," );
+    Serial.print(wz);
+
 
     Serial.print(",");
     
@@ -395,8 +492,8 @@ n++;
   Serial.print(" Hz\n#\n#  Tiempo total de la medida: "); Serial.print( (tf2 - tf1)/1000000.00 ); Serial.print(" s");
   Serial.print("\n#\n#  Cantidad de medidas N = "); Serial.print(n);
   Serial.print("\n#\n#  c_calibración = "); Serial.print(c_cal,16);
-  Serial.print(F("\n#\n#  ")); en_que_rango();
-  Serial.print("\n###################################################################");
+  Serial.print(F("\n#\n#  ")); en_que_rango_acel();
+  Serial.print(F("\n###################################################################"));
   delay(2000);
   Serial.end(); Serial.begin(baudios);
   n = 1;
