@@ -44,17 +44,17 @@ constexpr int   AY_OFFSET = 0;       // These values are unlikely to be zero.
 constexpr int   AZ_OFFSET = 0;
 
 // Output scale: 
-constexpr float AX_SCALE = 1.00457;     // Multiplier for accelerometer outputs. Use this to calibrate the sensor. If unknown set to 1.
-constexpr float AY_SCALE = 0.99170;
-constexpr float AZ_SCALE = 0.98317;
+constexpr float AX_SCALE = 1.0;     // Multiplier for accelerometer outputs. Use this to calibrate the sensor. If unknown set to 1.
+constexpr float AY_SCALE = 1.0;
+constexpr float AZ_SCALE = 1.0;
 
-constexpr float GX_SCALE = 0.99764;     // Multiplier to gyro outputs. Use this to calibrate the sensor. If unknown set to 1.
+constexpr float GX_SCALE = 1.0;     // Multiplier to gyro outputs. Use this to calibrate the sensor. If unknown set to 1.
 constexpr float GY_SCALE = 1.0;
-constexpr float GZ_SCALE = 1.01037;
+constexpr float GZ_SCALE = 1.0;
 
 // Bias estimate:
 #define         GYRO_BAND   35          // Standard deviation of the gyro signal. Gyro signals within this band (relative to the mean) are suppresed.   
-#define         BIAS_COUNT  5000        // Samples of the mean of the gyro signal. Larger values provide better calibration but delay suppression response. 
+#define         BIAS_COUNT  500        // Samples of the mean of the gyro signal. Larger values provide better calibration but delay suppression response. 
 
 //-- Set the template parameters:
 
@@ -72,6 +72,9 @@ const long baudios = 230400;
 //constante de calibración
 float c = 0.0; //variable global de calibración
 float Tcal = 0; //variable global de temperatura de calibración
+float wxbias = 0.0; //bias gyro x
+float wybias = 0.0; //bias gyro y
+float wzbias = 0.0; //bias gyro z
 
 //número de medida
 uint32_t n = 1;
@@ -104,19 +107,25 @@ void setup() {
 
 
 void loop() { 
-Serial.print(F("\nEscriba:\n\n\\
-      a para imprimir constantes de calibratio\n\n\\
-      c para calibrar el acelerómetro\n\n\\
-      i para ver ángulos del acelerómetro\n\n\\
-      s para imprimir medidas sin calibrar del acelerómetro\n\n\\
-      w para imprimir meddias sin calibrar del giroscopo\n\n\\
-      p para probar la fotocompuerta\n\n\\
-      m para medir\n\n\\
-      r para cambiar el rango del acelerómetro (2g ó 4g)\n\n\\
-      t para cambiar el rango del giróscopo\n\n\\
-      g para informar el rango del acelerómetro\n\n\\
-      h para informar el rango del giróscopo\n\n\\
-      f para cambiar el Filtro Digital Pasa Bajos\n\n"));
+Serial.print(F("\nIngrese:\n\\
+      __Calibración y Offsets__\n\n\\
+      a -calibra acelerómetro\n\\
+      b -imprime constante de calibración acelerómetro\n\\
+      c -determina offsets o bias del giróscopo\n\n\\
+      __Rango sensores/__\n\\
+      d -define rango acelerómetro\n\\
+      e -imprime rango acelerómetro\n\\
+      f -define rango giróscopo.\n\\
+      g -imprime rango giróscopo\n\n\\
+      h - define Filtro Pasa Bajos (Low Pass Filter).\n\n\\
+      __Fotocompuerta__\n\\
+      i -prueba fotocompuerta en A0\n\n\\
+      __Inclinación__\n\\
+      j - imprime ángulos del acelerómetro respecto de la vertical.\n\n\\
+      __Medidas__\n\\
+      k -imprimir medidas sin calibrar del acelerómetro\n\\
+      l -imprimir medidias sin calibrar del giroscopo\n\\
+      m -Medir Acel, gryro (calibrados) y fotocompuerta\n\n"));
 
 
       char bufferEntrada;
@@ -132,41 +141,44 @@ Serial.print(F("\nEscriba:\n\n\\
   
       switch(bufferEntrada){
                             case 'a':
+                            calibratio(20000); break;
+
+                            case 'b':
                             imprime_calibratio(); break;
                             
                             case 'c':
-                            calibratio(10000); break;
-
-                            case 'i':
-                            angulo_hermanos();break;  
-
-                            case 'm':
-                            mide_imprime_acel(c); break;
+                            bias_girsocopo(20000);break;
                             
-                            case 's':
-                            mide_imprime_acel(1.00); break;
-
-                            case 'w':
-                            mide_imprime_giroscopio(); break;
-                            
-                            case 'p':
-                            pruebafotocompuerta(); break;
-
-                            case 'r':
+                            case 'd':
                             rango_acel(); break;
                             
-                            case 't':
+                            case 'e':
+                            en_que_rango_acel();break;
+
+                            case 'f':
                             rango_giroscopo(); break;
 
                             case 'g':
-                            en_que_rango_acel();break;
+                            en_que_rango_giroscopo();break;
 
                             case 'h':
-                            en_que_rango_giroscopo();break;
-                            
-                            case 'f':
                             LowPassFilter(); break;
 
+                            case 'i':
+                            pruebafotocompuerta(); break;
+
+                            case 'j':
+                            angulo_hermanos();break;  
+
+                            case 'k':
+                            mide_imprime_acel(1.00); break;
+
+                            case 'l':
+                            mide_imprime_giroscopio(); break;
+                            
+                            case 'm':
+                            mide_imprime_acel(c); break;
+                            
                             default:  
                             Serial.println(F("Error: ingreso incorrecto."));
                             break;
@@ -174,6 +186,46 @@ Serial.print(F("\nEscriba:\n\n\\
 
 }
 //// FIN loop ////////////////////////////////////////////////////////////////////
+
+
+////////bias gyróscopo///
+
+void bias_girsocopo(int n){
+
+int32_t wxm_ac = 0;
+int32_t wym_ac = 0;
+int32_t wzm_ac = 0;
+
+uint32_t tant = millis();
+
+Serial.print(F("Ponga el giroscopo en reposo y presione cualquier tecla.\n"));
+while(!Serial.available());
+Serial.print("Obteniendo bias\n");
+Serial.end();
+Serial.begin(baudios);
+
+       for(int i = 0; i < n; i++){
+                                  wxm_ac = wxm_ac + imu.rawGx();
+                                  wym_ac = wym_ac + imu.rawGy();
+                                  wzm_ac = wzm_ac + imu.rawGz();
+                                  if(millis() > (tant + 500)){ Serial.print(F(".")); tant = millis();}
+                                 }   
+//medias
+wxbias = (float)wxm_ac / n;
+wybias = (float)wym_ac / n;
+wzbias = (float)wzm_ac / n;
+
+Serial.print("\nLos bias son:\n");
+Serial.print("wx_bias = "); Serial.println(wxbias);
+Serial.print("wy_bias = "); Serial.println(wybias);
+Serial.print("wz_bias = "); Serial.println(wzbias);
+Serial.print(F("Presione cualquier tecla para continuar."));
+while(!Serial.available());
+Serial.end();
+Serial.begin(baudios);
+}
+
+
 
 //función para ver los ángulos.
 void angulo_hermanos(){
@@ -452,11 +504,11 @@ do{
     Serial.print( "," );
     Serial.print(az);
     Serial.print( "," );
-    Serial.print(wx);
+    Serial.print(wx - wxbias);
     Serial.print( "," );
-    Serial.print(wy);
+    Serial.print(wy - wybias);
     Serial.print( "," );
-    Serial.print(wz);
+    Serial.print(wz - wzbias);
 
 
     Serial.print(",");
@@ -513,13 +565,15 @@ int32_t azm_ac = 0;
 
 //acumula
 uint32_t tant = 0;
-Serial.print(F("Calibrando.\n"));
+Serial.print(F("Ponga el acelerómetro en reposo y presione cualquier tecla.\n"));
+while(!Serial.available());
+Serial.print(F("Calibrando acelerómetro.\n")); 
 
        for(int i = 0; i < n; i++){
                                   axm_ac = axm_ac + imu.rawAx();
                                   aym_ac = aym_ac + imu.rawAy();
                                   azm_ac = azm_ac + imu.rawAz();
-                                  if(millis() > (tant + 1000)){ Serial.print(F("          .\n")); tant = millis();}
+                                  if(millis() > (tant + 350)){ Serial.print(F(".")); tant = millis();}
                                  }   
 
 //medias
@@ -529,9 +583,12 @@ float azm = (float)azm_ac / n;
 
 c = 9.7931 / sqrt(axm * axm + aym * aym + azm * azm);
 
-Serial.print("c_cal = "); Serial.println(c,16);
+Serial.print("\nc_cal = "); Serial.println(c,16);
 Serial.print("T_cal = "); Serial.println(Tcal);
-
+Serial.print(F("Presione cualquier tecla para continuar.\n"));
+while(!Serial.available());
+Serial.end();
+Serial.begin(baudios);
 }
 
 
