@@ -481,7 +481,7 @@ pinMode(2, INPUT);
 attachInterrupt(0, fc_negra_R, RISING);
 
 Serial.print(F("################################# M e d i d a ###########################################################\n"));
-Serial.print(F("t,ax,ay,az,wx,wy,wz,n_intR,t_intR,n_intF,t_intF\n"));
+Serial.print(F("t,ax,ay,az,wx,wy,wz,magx,magy,magz,n_intR,t_intR,n_intF,t_intF\n"));
 unsigned long tf1 = micros();
 
 float mxoffset = 0.0;
