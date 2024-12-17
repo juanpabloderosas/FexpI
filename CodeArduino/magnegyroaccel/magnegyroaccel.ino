@@ -506,7 +506,7 @@ do{
     float wz = imu.rawGz();
     uint32_t td = micros(); 
 
-    float t = (float)(((td - ti) - tf1)/1000000.000);
+    float t = (float)(((td + ti) - tf1)/2000000.000);
 
     int mx = compass.getX();
     int my = compass.getY();
