@@ -1,8 +1,4 @@
 unsigned long TOF = 0; // Tiempo de Vuelo (Time of Flight)en microsegundos
-unsigned long t_inicio = 0; //tiempo de inicio de cada serie de medidas
-unsigned long ti = 0; // Tiempo inicio de medida, en microsegundos
-unsigned long tf = 0; // Tiempo fin de medida, en microsegundos
-
 
 
 const uint8_t Trig = 4; // 4 Dispara
@@ -16,40 +12,39 @@ void setup() {
   Serial.begin(230400);
 pinMode(Trig, OUTPUT);
 pinMode(Echo, INPUT);
+Serial.print("ingrese medidas de distancia d en mm\n");
+Serial.println(F("#Nuevo Loggeo\ni,d_mm,TOF_us"));              
 }
 
 void loop() {
-Serial.begin(230400);
-Serial.print(F("#Presione una tecla para comenzar una medida\n#(y una tecla para pararla)\n"));
-while(!Serial.available()){
-                          if(Serial.available()) {
-                          break;
-                          }
-              }
+uint16_t d = readUint16();
 
-Serial.end(); //apaga para vaciar el serial (no conozco otra forma menos rústica)
+        for(int i = 0; i < 5000; i++){
+            digitalWrite(Trig, HIGH);
+            delayMicroseconds(20);
+            digitalWrite(Trig, LOW); 
 
-Serial.begin(230400);
-Serial.println(F("#Nuevo Loggeo\nt_us,TOF_us"));              
-t_inicio = micros();
+            TOF = pulseIn(Echo, HIGH);
+            Serial.print(i);
+            Serial.print(",");
+            Serial.print(d);
+            Serial.print(",");      
+            Serial.println(TOF);
+            delay(80);
+        }
 
-do{
-digitalWrite(Trig, HIGH);
-delayMicroseconds(15);
-ti = micros() - t_inicio;
+}
 
+uint16_t readUint16(void) {
+                  String inputString;
+                  char charBuffer[5];
+                  uint16_t number = 0;
 
-digitalWrite(Trig, LOW); 
-TOF = pulseIn(Echo, HIGH);
-
-tf = micros() - t_inicio;
-Serial.print((tf + ti)/2);
-Serial.print(",");
-Serial.println(TOF);
-
-delay(60);
-}while(!Serial.available());
-Serial.println(F("#Medida interrumpida por el usuario\n#\n#"));
-delay(2000);
-Serial.end();
+                  while (!Serial.available()) {}
+                  if (Serial.available() > 0) {
+                    inputString = Serial.readStringUntil('\n');
+                    inputString.substring(0, 5).toCharArray(charBuffer, 6);
+                    number = atoi(charBuffer);
+                  }
+                  return number;
 }
