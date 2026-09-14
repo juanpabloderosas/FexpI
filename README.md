@@ -1,12 +1,12 @@
 # FexpI
 
-Esta página es el repositorio de Física Experimental I, de la carrera de Licenciatura en Física de la **[UNSL](www.unsl.edu.ar)**
+Esta página es el repositorio de Física Experimental I, de la carrera de Licenciatura en Física de la [**UNSL**](www.unsl.edu.ar)
 
 Está dividido por carpetas para descargar. Este sitio está *en construcción* de manera permanente...Para empezar:
 
 ### Análisis de Datos
 
-Contiene los archivos que vamos haciendo para analizar los datos de los laboratorios. Puede tocar en [R language](https://www.r-project.org/) ó [Julia Language](https://julialang.org)
+Contiene los archivos que vamos haciendo para analizar los datos de los laboratorios. Puede tocar en [**R Language**](https://www.r-project.org/) ó [**Julia Language**](https://julialang.org)
 
 
 
