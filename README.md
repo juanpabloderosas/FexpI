@@ -6,7 +6,8 @@ Está dividido por carpetas para descargar. Este sitio está *en construcción* 
 
 ### Análisis de Datos
 
-Contiene los archivos que vamos haciendo para analizar los datos de los laboratorios.
+Contiene los archivos que vamos haciendo para analizar los datos de los laboratorios. Puede tocar ![R](https://shields.io) ó ![Julia Logo](https://githubusercontent.com).
+
 
 
 ### Code
