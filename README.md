@@ -16,7 +16,7 @@ Contiene códigos hechos por los estudiantes en los TF's de la materia que puede
 
 ### CodeArduino
 
-Tiene los códigos de los diferentes sensores / montajes que usamos en la materia.
+Tiene los códigos de `ÀrduinoIDE` para los diferentes sensores / montajes que usamos en la materia. 
 
 
 
