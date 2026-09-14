@@ -6,7 +6,7 @@ Está dividido por carpetas para descargar. Este sitio está *en construcción* 
 
 ### Análisis de Datos
 
-Contiene los archivos que vamos haciendo para analizar los datos de los laboratorios. Puede tocar ![R](https://www.r-project.org/) ó ![Julia](https://www.julialang.org/).
+Contiene los archivos que vamos haciendo para analizar los datos de los laboratorios. Puede tocar ![R](https://www.r-project.org/) ó ![Julia](https://julialang.org/).
 
 
 
